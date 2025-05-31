@@ -1,0 +1,13 @@
+*.exe
+*.out
+*.o
+
+/go.sum
+/go.sum.old
+
+*.db
+
+*.log
+*.tmp
+.DS_Store
+.env
