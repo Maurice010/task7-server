@@ -14,7 +14,10 @@ import (
 
 func main() {
 	database.Connect()
-	database.DB.AutoMigrate(&models.User{})
+	if err := database.DB.AutoMigrate(&models.User{}); err != nil {
+		log.Fatalf("migration failed: %v", err)
+	}
+	
 
 	e := echo.New()
 
