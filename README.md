@@ -1,0 +1,6 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=bugs)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=Maurice010_task7-server&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=Maurice010_task7-server)
