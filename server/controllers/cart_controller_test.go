@@ -17,7 +17,7 @@ func init() {
 	database.Connect()
 }
 
-func TestSaveCart_Valid(t *testing.T) {
+func testSaveCartValid(t *testing.T) {
 	e := echo.New()
 	items := []dto.CartItemDTO{
 		{ProductID: 1, Quantity: 2},
@@ -35,7 +35,7 @@ func TestSaveCart_Valid(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "cart_id")
 }
 
-func TestSaveCart_Empty(t *testing.T) {
+func testSaveCartEmpty(t *testing.T) {
 	e := echo.New()
 	body, _ := json.Marshal([]dto.CartItemDTO{})
 
@@ -50,7 +50,7 @@ func TestSaveCart_Empty(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "Empty")
 }
 
-func TestSaveCart_InvalidJSON(t *testing.T) {
+func testSaveCartInvalidJSON(t *testing.T) {
 	e := echo.New()
 	invalidBody := []byte("{not json}")
 

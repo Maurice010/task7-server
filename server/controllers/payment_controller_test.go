@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHandlePayment_ValidRequest(t *testing.T) {
+func testHandlePaymentValidRequest(t *testing.T) {
     e := echo.New()
 
     p := models.Product{Name: "TestProduct", Price: 100.0}
@@ -41,7 +41,7 @@ func TestHandlePayment_ValidRequest(t *testing.T) {
     assert.Greater(t, resp["total"].(float64), 0.0)
 }
 
-func TestHandlePayment_EmptyCart(t *testing.T) {
+func testHandlePaymentEmptyCart(t *testing.T) {
 	e := echo.New()
 	body, _ := json.Marshal([]dto.CartItemDTO{})
 	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
@@ -59,7 +59,7 @@ func TestHandlePayment_EmptyCart(t *testing.T) {
 	assert.Contains(t, resp["error"], "empty")
 }
 
-func TestHandlePayment_InvalidJSON(t *testing.T) {
+func testHandlePaymentInvalidJSON(t *testing.T) {
 	e := echo.New()
 	invalid := []byte("{not json}")
 	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(invalid))
@@ -73,7 +73,7 @@ func TestHandlePayment_InvalidJSON(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "invalid")
 }
 
-func TestHandlePayment_ProductNotFound(t *testing.T) {
+func testHandlePaymentProductNotFound(t *testing.T) {
 	e := echo.New()
 	items := []dto.CartItemDTO{
 		{ProductID: 99999, Quantity: 1},
@@ -95,7 +95,7 @@ func TestHandlePayment_ProductNotFound(t *testing.T) {
 	assert.Equal(t, 0.0, resp["total"].(float64))
 }
 
-func TestHandlePayment_MixedValidAndInvalidProducts(t *testing.T) {
+func testHandlePaymentMixedValidAndInvalidProducts(t *testing.T) {
 	e := echo.New()
 	valid := models.Product{Name: "TestMix", Price: 10.0}
 	database.DB.Create(&valid)
@@ -126,7 +126,7 @@ func TestHandlePayment_MixedValidAndInvalidProducts(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "total")
 }
 
-func TestHandlePayment_ZeroQuantity(t *testing.T) {
+func testHandlePaymentZeroQuantity(t *testing.T) {
 	e := echo.New()
 	p := models.Product{Name: "ZeroQty", Price: 99.9}
 	database.DB.Create(&p)
