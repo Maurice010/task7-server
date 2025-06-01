@@ -14,7 +14,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testHandlePaymentValidRequest(t *testing.T) {
+const paymentPath = "/payment"
+
+func TestHandlePaymentValidRequest(t *testing.T) {
     e := echo.New()
 
     p := models.Product{Name: "TestProduct", Price: 100.0}
@@ -25,7 +27,7 @@ func testHandlePaymentValidRequest(t *testing.T) {
     }
     body, _ := json.Marshal(items)
 
-    req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
+    req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(body))
     req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
     rec := httptest.NewRecorder()
     c := e.NewContext(req, rec)
@@ -41,10 +43,10 @@ func testHandlePaymentValidRequest(t *testing.T) {
     assert.Greater(t, resp["total"].(float64), 0.0)
 }
 
-func testHandlePaymentEmptyCart(t *testing.T) {
+func TestHandlePaymentEmptyCart(t *testing.T) {
 	e := echo.New()
 	body, _ := json.Marshal([]dto.CartItemDTO{})
-	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -59,10 +61,10 @@ func testHandlePaymentEmptyCart(t *testing.T) {
 	assert.Contains(t, resp["error"], "empty")
 }
 
-func testHandlePaymentInvalidJSON(t *testing.T) {
+func TestHandlePaymentInvalidJSON(t *testing.T) {
 	e := echo.New()
 	invalid := []byte("{not json}")
-	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(invalid))
+	req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(invalid))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -73,13 +75,13 @@ func testHandlePaymentInvalidJSON(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "invalid")
 }
 
-func testHandlePaymentProductNotFound(t *testing.T) {
+func TestHandlePaymentProductNotFound(t *testing.T) {
 	e := echo.New()
 	items := []dto.CartItemDTO{
 		{ProductID: 99999, Quantity: 1},
 	}
 	body, _ := json.Marshal(items)
-	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -95,7 +97,7 @@ func testHandlePaymentProductNotFound(t *testing.T) {
 	assert.Equal(t, 0.0, resp["total"].(float64))
 }
 
-func testHandlePaymentMixedValidAndInvalidProducts(t *testing.T) {
+func TestHandlePaymentMixedValidAndInvalidProducts(t *testing.T) {
 	e := echo.New()
 	valid := models.Product{Name: "TestMix", Price: 10.0}
 	database.DB.Create(&valid)
@@ -105,7 +107,7 @@ func testHandlePaymentMixedValidAndInvalidProducts(t *testing.T) {
 		{ProductID: 99999, Quantity: 1},
 	}
 	body, _ := json.Marshal(items)
-	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -126,7 +128,7 @@ func testHandlePaymentMixedValidAndInvalidProducts(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "total")
 }
 
-func testHandlePaymentZeroQuantity(t *testing.T) {
+func TestHandlePaymentZeroQuantity(t *testing.T) {
 	e := echo.New()
 	p := models.Product{Name: "ZeroQty", Price: 99.9}
 	database.DB.Create(&p)
@@ -135,7 +137,7 @@ func testHandlePaymentZeroQuantity(t *testing.T) {
 		{ProductID: p.ID, Quantity: 0},
 	}
 	body, _ := json.Marshal(items)
-	req := httptest.NewRequest(http.MethodPost, "/payment", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, paymentPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

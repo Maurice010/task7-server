@@ -13,18 +13,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const saveCartPath = "/save-cart"
+
 func init() {
 	database.Connect()
 }
 
-func testSaveCartValid(t *testing.T) {
+func TestSaveCartValid(t *testing.T) {
 	e := echo.New()
 	items := []dto.CartItemDTO{
 		{ProductID: 1, Quantity: 2},
 	}
 	body, _ := json.Marshal(items)
 
-	req := httptest.NewRequest(http.MethodPost, "/save-cart", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, saveCartPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -35,11 +37,11 @@ func testSaveCartValid(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "cart_id")
 }
 
-func testSaveCartEmpty(t *testing.T) {
+func TestSaveCartEmpty(t *testing.T) {
 	e := echo.New()
 	body, _ := json.Marshal([]dto.CartItemDTO{})
 
-	req := httptest.NewRequest(http.MethodPost, "/save-cart", bytes.NewReader(body))
+	req := httptest.NewRequest(http.MethodPost, saveCartPath, bytes.NewReader(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
@@ -50,11 +52,11 @@ func testSaveCartEmpty(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "Empty")
 }
 
-func testSaveCartInvalidJSON(t *testing.T) {
+func TestSaveCartInvalidJSON(t *testing.T) {
 	e := echo.New()
 	invalidBody := []byte("{not json}")
 
-	req := httptest.NewRequest(http.MethodPost, "/save-cart", bytes.NewReader(invalidBody))
+	req := httptest.NewRequest(http.MethodPost, saveCartPath, bytes.NewReader(invalidBody))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)

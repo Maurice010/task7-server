@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func testGetProducts(t *testing.T) {
+func TestGetProducts(t *testing.T) {
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/products", nil)
 	rec := httptest.NewRecorder()
@@ -24,7 +24,7 @@ func testGetProducts(t *testing.T) {
 	assert.Contains(t, rec.Body.String(), "Test")
 }
 
-func testGetProductsEmpty(t *testing.T) {
+func TestGetProductsEmpty(t *testing.T) {
 	e := echo.New()
 	database.DB.Exec("DELETE FROM products")
 
